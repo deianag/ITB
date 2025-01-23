@@ -1,0 +1,25 @@
+/* EthConnect.css */
+.eth-connect-container {
+    margin-bottom: 1rem;
+  }
+  
+  .eth-connect-button {
+    background-color: #12293e;
+    border: 1px solid #5294e2;
+    padding: 0.5em 1em;
+    color: #ffffff;
+    font-size: 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.25s;
+  }
+  
+  .eth-connect-button:hover {
+    background-color: #1c3e5a;
+  }
+  
+  .eth-connect-status {
+    color: #ffffff;
+    font-weight: 600;
+  }
+  

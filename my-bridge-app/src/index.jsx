@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 import '@mysten/dapp-kit/dist/index.css';
-
+import './index.css'; // Minimal global resets
 
 import {
   createNetworkConfig,
@@ -11,7 +11,6 @@ import {
   WalletProvider,
 } from '@mysten/dapp-kit';
 import { getFullnodeUrl } from '@mysten/sui/client';
-
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 

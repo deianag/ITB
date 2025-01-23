@@ -1,0 +1,40 @@
+/* MintIBTOnSui.css */
+.mint-container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .mint-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .mint-input-field {
+    padding: 0.5rem;
+    border: 1px solid #3c5061;
+    background-color: #12293e;
+    color: #ffffff;
+    outline: none;
+    border-radius: 4px;
+  }
+  
+  .mint-input-field:focus {
+    border-color: #5294e2;
+  }
+  
+  .mint-action-button {
+    background-color: #12293e;
+    border: 1px solid #5294e2;
+    padding: 0.5rem 1rem;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.25s;
+  }
+  
+  .mint-action-button:hover {
+    background-color: #1c3e5a;
+  }
+  

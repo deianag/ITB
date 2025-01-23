@@ -1,0 +1,57 @@
+/* BridgeForm.css */
+.bridge-form-container {
+    margin-top: 1rem;
+    border: 1px solid #5294e2;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #0f2f48;
+    width: 80%;
+    margin: 1rem auto;
+  }
+  
+  .bridge-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+  }
+  
+  .bridge-subtitle {
+    margin: 0.5rem 0;
+    color: #ffffff;
+  }
+  
+  .bridge-input-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  
+  .bridge-input-field {
+    padding: 0.5rem;
+    border: 1px solid #3c5061;
+    background-color: #12293e;
+    color: #ffffff;
+    outline: none;
+    border-radius: 4px;
+  }
+  
+  .bridge-input-field:focus {
+    border-color: #5294e2;
+  }
+  
+  .bridge-action-button {
+    background-color: #12293e;
+    border: 1px solid #5294e2;
+    padding: 0.5rem 1rem;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.25s;
+  }
+  
+  .bridge-action-button:hover {
+    background-color: #1c3e5a;
+  }
+  
