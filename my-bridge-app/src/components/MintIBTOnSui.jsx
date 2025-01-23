@@ -1,69 +1,72 @@
 import React, { useState } from 'react';
-import { useSignAndExecuteTransaction, useCurrentAccount } from '@mysten/dapp-kit';
+import {
+  ConnectButton,
+  useSuiClient,
+  useCurrentAccount,
+  useSignAndExecuteTransaction,
+} from '@mysten/dapp-kit';
+import { Transaction } from '@mysten/sui/transactions';
 
 const PKG_ID = "0x12ebb15156ee7d5f9f5870e37a83add6ee536b8a2d7b0df6d826192971028515";
-const ADMIN_CAP_ID = "0x5a0c6cf32837e1c8b4b1d0faecc5d9819ca9074753a6145a6af928c58a60f979";
-const DECIMALS = 9n;
+const TREASURY_CAP_ID = "0x5a0c6cf32837e1c8b4b1d0faecc5d9819ca9074753a6145a6af928c58a60f979"; // Replace with your actual treasury cap ID
+const ADDRESS = "0xbd016088dfbc95b3145ddb59f506bfdc6593d3c1ab047f7712b8763bd6fb6e81";
 
 function MintIBTOnSui() {
-  const [mintAmount, setMintAmount] = useState('');
-  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+  const client = useSuiClient();
+  const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction({
+    execute: async ({ bytes, signature }) =>
+      await client.executeTransactionBlock({
+        transactionBlock: bytes,
+        signature,
+        options: {
+          showRawEffects: true,
+          showObjectChanges: true,
+        },
+      }),
+  });
+  const [digest, setDigest] = useState('');
+  const [amount, setAmount] = useState(''); // State for user input
   const currentAccount = useCurrentAccount();
 
-  async function handleMint() {
-    if (!mintAmount) {
-      alert('Please enter an amount to mint!');
-      return;
-    }
-    if (!currentAccount?.address) {
-      alert('No Sui wallet connected. Please connect your Sui wallet first.');
-      return;
-    }
-
+  const handleMint = async () => {
     try {
-      const baseUnits = BigInt(mintAmount) * (10n ** DECIMALS);
-      console.log(`[Sui Mint] Attempting to mint ${mintAmount} IBT (base units: ${baseUnits})...`);
+      const tx = new Transaction();
 
-      const result = await signAndExecuteTransaction(
-        {
-          packageObjectId: PKG_ID,
-          module: 'IBT',
-          function: 'mint',
-          typeArguments: [],
-          arguments: [
-            ADMIN_CAP_ID,
-            baseUnits.toString(),
-            currentAccount.address,
-          ],
-          gasBudget: 20_000_000,
-        },
-        'moveCall'
-      );
+      tx.moveCall({
+        arguments: [
+          tx.object(TREASURY_CAP_ID),
+          tx.pure.u64(BigInt(amount)), // Use the user input amount
+          tx.object(ADDRESS)
+        ],
+        target: `${PKG_ID}::IBT::mint`,
+      });
 
-      console.log('[Sui Mint] Full transaction result:', result);
-      alert(`Successfully minted ${mintAmount} IBT to Sui address: ${currentAccount.address}`);
-    } catch (err) {
-      console.error('[Sui Mint] Transaction failed:', err);
-      alert(`Mint on Sui failed: ${err?.message}`);
+      const result = await signAndExecuteTransaction({
+        transaction: tx,
+      });
+      setDigest(result.digest);
+    } catch (error) {
+      console.error("Error minting IBT:", error);
     }
-  }
+  };
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h2>Mint IBT on Sui</h2>
-      <p>Connected Sui Wallet: {currentAccount?.address ?? '(not connected)'} </p>
-      <div style={{ marginTop: '1rem' }}>
-        <label>Amount to Mint:</label>
-        <input
-          type="number"
-          value={mintAmount}
-          onChange={(e) => setMintAmount(e.target.value)}
-          style={{ marginLeft: '0.5rem' }}
-        />
-      </div>
-      <button onClick={handleMint} style={{ marginTop: '1rem' }}>
-        Mint on Sui
-      </button>
+    <div style={{ padding: 20 }}>
+      <ConnectButton />
+      {currentAccount && (
+        <>
+          <div>
+            <input
+              type="number"
+              placeholder="Enter amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+            <button onClick={handleMint}>Sign and execute transaction</button>
+          </div>
+          <div>Digest: {digest}</div>
+        </>
+      )}
     </div>
   );
 }
